@@ -1,49 +1,38 @@
 function Circle (pos, rad, vel, col, mass, e, rest) {
-	this.pos = pos || createVector(random(100,1150),random(100,500));
-	this.prevpos = createVector(this.pos.x, this.pos.y);
-	this.rad = rad || random(2,2.5);
-	this.vel = vel || p5.Vector.random2D();
+	this.pos = pos || createVector(random(100,1150),random(100,500)); // compulsory
+	this.prevpos = createVector(this.pos.x, this.pos.y); // compulsory
+	this.rad = rad || random(2,4); // compulsory
+	this.vel = vel || p5.Vector.random2D(); // compulsory
 	this.col = col || createVector(random(0,255),255,90);
-	this.mass = mass || 2 * this.rad;
-	this.invmass = 1/this.mass;
-	this.elast = (e == null) ? 0.95 : e;
-	this.typ = "Circle";
-	this.movementRestricted = rest || false;
-	this.accel = createVector(0,0);
-	this.force = createVector(0,0);
-	this.trail = [];
+	this.mass = mass || 2 * this.rad; // compulsory
+	this.invmass = 1/this.mass; // compulsory
+	this.elast = (e == null) ? 0.95 : e; // compulsory
+	this.typ = "Circle"; // compulsory
+	this.movementRestricted = rest || false; // compulsory
+	this.accel = createVector(0,0); // compulsory
+	this.force = createVector(0,0); // compulsory
 }
 
 Circle.prototype.update = function() {
+	// this function should be called to update the position and velocity every necessary frame
 	if(!this.movementRestricted) {
 		this.accel = this.force.mult(this.invmass);
 		this.vel.add(this.accel);
 		this.prevpos = createVector(this.pos.x, this.pos.y);
 		this.pos.add(this.vel);
 		this.force.mult(0);
-		// trail effect
-		//
 	}
 };
 
 Circle.prototype.updateTrail = function() {
+	// this function must be called to draw every necessary frame
 	this.trail.push(createVector(this.pos.x,this.pos.y));
-		//if(this.trail.length > 15)
-		//	this.trail.splice(0,1);
 }
 
 Circle.prototype.draw = function() {
 	//stroke(15);
 	fill(this.col.x,this.col.y,this.col.z);
 	ellipse(this.pos.x,this.pos.y,2*this.rad,2*this.rad);
-	//line(this.pos.x, this.pos.y, this.prevpos.x, this.prevpos.y);
-	// trail effect		// NOTE :  we have found that trailing can just be acheived by continously drawing a backgorund with lesser alpha, its not perfect but does the simple job
-					   // Also note that the combination of brightness and alpha is what does the trick, not alpha just alone
-	//for (var i = 0; i < this.trail.length-1; i+=3) {
-	//	noStroke();
-	//	fill(this.col.x, this.col.y, this.col.z, 255*(i+1)/this.trail.length);
-	//	ellipse(this.trail[i].x, this.trail[i].y, 2*(this.rad)*(i+1)/this.trail.length);
-	//}
 };
 
 Circle.prototype.addForce = function(f) {
